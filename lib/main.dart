@@ -10,7 +10,9 @@ class BankApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: const Text("Sistema de Gestãoo de Contas"),
+      home: Scaffold(
+        body: Center(child: Text("Sistema de gestão de contas")),
+      ),
     );
   }
 }
