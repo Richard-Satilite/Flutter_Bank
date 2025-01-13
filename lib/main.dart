@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bank/ui/home_screen.dart';
+import 'package:flutter_bank/ui/login_screen.dart';
 
 void main() {
   runApp(const BankApp());
@@ -10,9 +12,11 @@ class BankApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        body: Center(child: Text("Sistema de gestão de contas")),
-      ),
+      routes: {
+        "login": (context) => const LoginScreen(),
+        "home": (context) => const HomeScreen(),
+      },
+      initialRoute: "login",
     );
   }
 }
