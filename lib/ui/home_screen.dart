@@ -5,11 +5,20 @@ import '../models/account.dart';
 import '../services/account_service.dart';
 import 'widgets/account_widget.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  Future<List<Account>> _futureGetALl = AccountService().getAll();
+
   Future<void> refreshGetAll() async {
-    return null;
+    setState(() {
+      _futureGetALl = AccountService().getAll();
+    });
   }
 
   @override
@@ -32,7 +41,7 @@ class HomeScreen extends StatelessWidget {
         child: RefreshIndicator(
           onRefresh: refreshGetAll,
           child: FutureBuilder(
-            future: AccountService().getAll(),
+            future: _futureGetALl,
             builder: (context, snapshot) {
               switch (snapshot.connectionState) {
                 case ConnectionState.none:
