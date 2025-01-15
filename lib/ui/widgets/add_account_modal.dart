@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
+import '../../models/account.dart';
+import '../../services/account_service.dart';
 import '../styles/colors.dart';
 
 class AddAccountModal extends StatefulWidget {
@@ -11,6 +14,10 @@ class AddAccountModal extends StatefulWidget {
 
 class _AddAccountModalState extends State<AddAccountModal> {
   String _accountType = "1A";
+
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -44,13 +51,12 @@ class _AddAccountModalState extends State<AddAccountModal> {
                 style: TextStyle(fontSize: 18),
               ),
               TextFormField(
+                controller: _nameController,
                 decoration: const InputDecoration(label: Text("Nome")),
               ),
               TextFormField(
+                controller: _lastNameController,
                 decoration: const InputDecoration(label: Text("Sobrenome")),
-              ),
-              TextFormField(
-                decoration: const InputDecoration(label: Text("Saldo")),
               ),
               SizedBox(height: 16),
               const Text("Tipo de conta"),
@@ -77,14 +83,22 @@ class _AddAccountModalState extends State<AddAccountModal> {
                 children: [
                   Expanded(
                       child: ElevatedButton(
-                          onPressed: () {}, child: Text("Cancelar"))),
+                          onPressed: (isLoading) ? null : onButtonCancelClicked,
+                          child: Text("Cancelar"))),
                   Expanded(
                       child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: onButtonSendClicked,
                     style: ButtonStyle(
                         backgroundColor:
                             WidgetStatePropertyAll(AppColor.btnOrange)),
-                    child: Text("Adicionar"),
+                    child: (isLoading)
+                        ? Transform.scale(
+                            scale: 0.5,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                            ),
+                          )
+                        : const Text("Adicionar"),
                   ))
                 ],
               )
@@ -93,5 +107,36 @@ class _AddAccountModalState extends State<AddAccountModal> {
         ),
       ),
     );
+  }
+
+  onButtonCancelClicked() {
+    if (!isLoading) {
+      closeModal();
+    }
+  }
+
+  onButtonSendClicked() async {
+    if (!isLoading) {
+      setState(() {
+        isLoading = true;
+      });
+      String name = _nameController.text;
+      String lastName = _lastNameController.text;
+
+      Account account = Account(
+        id: const Uuid().v1(),
+        name: name,
+        lastName: lastName,
+        balance: 0,
+        accountType: _accountType,
+      );
+
+      await AccountService().addAccount(account);
+      closeModal();
+    }
+  }
+
+  closeModal() {
+    Navigator.pop(context);
   }
 }
