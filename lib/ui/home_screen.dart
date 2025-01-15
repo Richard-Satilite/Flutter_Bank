@@ -4,6 +4,7 @@ import 'package:flutter_bank/ui/styles/colors.dart';
 import '../models/account.dart';
 import '../services/account_service.dart';
 import 'widgets/account_widget.dart';
+import 'widgets/add_account_modal.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -35,6 +36,22 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
         title: Text("Sistema de Gestão de Contas"),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            builder: (context) {
+              return AddAccountModal();
+            },
+          );
+        },
+        backgroundColor: AppColor.btnOrange,
+        child: const Icon(
+          Icons.add,
+          color: Colors.black,
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
