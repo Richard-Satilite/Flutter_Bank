@@ -36,14 +36,6 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColor.lightGrey,
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.pushReplacementNamed(context, 'login');
-            },
-            icon: Icon(Icons.arrow_back),
-          ),
-        ],
         title: Text("Sistema de Gestão de Contas"),
       ),
       floatingActionButton: FloatingActionButton(
