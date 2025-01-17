@@ -1,8 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bank/services/api_key.dart';
 import 'package:flutter_bank/ui/styles/colors.dart';
+import 'package:flutter_bank/ui/widgets/custom_form_field.dart';
+import 'package:flutter_bank/utils/extensions.dart';
 
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+class LoginScreen extends StatefulWidget {
+  LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final _formKey = GlobalKey<FormState>();
+
+  String? _API;
 
   @override
   Widget build(BuildContext context) {
@@ -17,13 +29,10 @@ class LoginScreen extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(32),
+            padding: const EdgeInsets.all(16),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                const SizedBox(
-                  height: 16,
-                ),
                 Image.asset(
                   "assets/images/brandTitle.png",
                   width: 256,
@@ -40,22 +49,31 @@ class LoginScreen extends StatelessWidget {
                     SizedBox(
                       height: 32,
                     ),
-                    TextFormField(
-                      decoration: const InputDecoration(label: Text("E-mail")),
-                    ),
+                    Form(
+                        key: _formKey,
+                        child: CustomFormField(
+                          validator: (val) {
+                            if (!val!.isValidAPI) {
+                              return "Chave API inválida.";
+                            }
+                            return null;
+                          },
+                          hintText: "API Git",
+                          onSaved: (val) {
+                            setState(() {
+                              _API = val;
+                            });
+                          },
+                        )),
                     SizedBox(
-                      height: 16,
-                    ),
-                    TextFormField(
-                      obscureText: true,
-                      decoration: const InputDecoration(label: Text("Senha")),
-                    ),
-                    SizedBox(
-                      height: 32,
+                      height: 64,
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        Navigator.pushReplacementNamed(context, "home");
+                        if (_formKey.currentState!.validate()) {
+                          _formKey.currentState!.save();
+                          Navigator.pushNamed(context, "home", arguments: _API);
+                        }
                       },
                       style: ButtonStyle(
                         backgroundColor:

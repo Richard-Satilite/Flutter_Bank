@@ -3,15 +3,15 @@ import 'package:http/http.dart';
 import 'dart:convert';
 import '../models/account.dart';
 import 'api_endpoints.dart';
-import 'api_key.dart'; //THIS ONLY IS AVAILABE FOR THE OWNER
+//import 'api_key.dart'; //THIS ONLY IS AVAILABE FOR THE OWNER
 
 class AccountService {
   final StreamController<String> _streamController = StreamController<String>();
   Stream<String> get streamInfos => _streamController.stream;
-  String url;
-
+  String url, gistKey;
   AccountService(
-      {this.url = "${ApiEndpoints.base}/${ApiEndpoints.accEndPoint}"});
+      {this.url = "${ApiEndpoints.base}/${ApiEndpoints.accEndPoint}",
+      required this.gistKey});
 
   Future<List<Account>> getAll() async {
     Response response = await get(Uri.parse(url), headers: {

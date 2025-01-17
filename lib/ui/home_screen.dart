@@ -14,11 +14,20 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  Future<List<Account>> _futureGetALl = AccountService().getAll();
+  late String _API;
+
+  late Future<List<Account>> _futureGetAll;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _API = ModalRoute.of(context)!.settings.arguments as String;
+    _futureGetAll = AccountService(gistKey: _API).getAll();
+  }
 
   Future<void> refreshGetAll() async {
     setState(() {
-      _futureGetALl = AccountService().getAll();
+      _futureGetAll = AccountService(gistKey: _API).getAll();
     });
   }
 
@@ -43,7 +52,9 @@ class _HomeScreenState extends State<HomeScreen> {
             context: context,
             isScrollControlled: true,
             builder: (context) {
-              return AddAccountModal();
+              return AddAccountModal(
+                API: _API,
+              );
             },
           );
         },
@@ -58,7 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: RefreshIndicator(
           onRefresh: refreshGetAll,
           child: FutureBuilder(
-            future: _futureGetALl,
+            future: _futureGetAll,
             builder: (context, snapshot) {
               switch (snapshot.connectionState) {
                 case ConnectionState.none:

@@ -13,7 +13,7 @@ class BankApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       routes: {
-        "login": (context) => const LoginScreen(),
+        "login": (context) => LoginScreen(),
         "home": (context) => HomeScreen(),
       },
       initialRoute: "login",

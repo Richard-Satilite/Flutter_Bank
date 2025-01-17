@@ -16,7 +16,7 @@ class TransactionService {
   Stream<String> get streamInfos => _streamController.stream;
   Uuid _uuid = Uuid();
   String url = "${ApiEndpoints.base}/${ApiEndpoints.transactionEndPoint}";
-  final AccountService _accountService = AccountService();
+  final AccountService _accountService = AccountService(gistKey: gistKey);
 
   Future<Transaction> makeTransaction(
       {required String idSender,
